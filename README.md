@@ -22,11 +22,8 @@ cd warehouse
 3. Создайте и активируйте виртуальное окружение:
 
 ```
-python -m venv venv
-```
-```
-source venv/bin/activate  # для Linux/Mac
-venv\Scripts\activate     # для Windows
+python -m venv .venv
+source venv/bin/activate
 ```
 
 4. Установите необходимые зависимости:
@@ -34,6 +31,7 @@ venv\Scripts\activate     # для Windows
 ```
 pip install -r requirements.txt
 ```
+
 5. Создайте файл .env и ознакомьтесь с его содержимым:
 
 ```
