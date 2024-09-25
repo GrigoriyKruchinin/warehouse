@@ -23,7 +23,7 @@ cd warehouse
 
 ```
 python -m venv .venv
-source venv/bin/activate
+source .venv/bin/activate
 ```
 
 Или используйте встроенные возможности создания и активации виртуального окружения вашей IDE.
