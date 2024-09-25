@@ -20,7 +20,7 @@ config = context.config
 
 config.set_main_option(
     "sqlalchemy.url",
-    f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@db:5432/{os.getenv('POSTGRES_DB')}",
+    os.getenv("DATABASE_URL"),
 )
 
 # Interpret the config file for Python logging.

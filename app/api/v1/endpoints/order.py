@@ -1,26 +1,24 @@
 from typing import List
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
 
 from app.schemas.order import OrderBase, OrderCreate, Order
 from app.db.models.order import Order as OrderModel
 from app.db.models.order_item import OrderItem as OrderItemModel
 from app.db.models.product import Product as ProductModel
-from app.db.session import SessionLocal
+from app.db.session import get_db
 
 router = APIRouter()
 
 
 @router.post("/", response_model=Order)
-def create_order(order: OrderCreate):
-    db = SessionLocal()
-
+def create_order(order: OrderCreate, db: Session = Depends(get_db)):
     for item in order.items:
         product = (
             db.query(ProductModel).filter(ProductModel.id == item.product_id).first()
         )
         if not product or product.quantity_in_stock < item.quantity:
-            db.close()
             raise HTTPException(
                 status_code=400,
                 detail=f"Insufficient quantity for product ID {item.product_id}",
@@ -51,8 +49,7 @@ def create_order(order: OrderCreate):
 
 
 @router.get("/", response_model=List[Order])
-def get_orders():
-    db = SessionLocal()
+def get_orders(db: Session = Depends(get_db)):
     orders = db.query(OrderModel).all()
 
     orders_with_items = []
@@ -68,8 +65,7 @@ def get_orders():
 
 
 @router.get("/{id}", response_model=Order)
-def get_order(id: int):
-    db = SessionLocal()
+def get_order(id: int, db: Session = Depends(get_db)):
     order = db.query(OrderModel).filter(OrderModel.id == id).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -82,8 +78,9 @@ def get_order(id: int):
 
 
 @router.patch("/{id}/status")
-def update_order_status(id: int, status_update: OrderBase):
-    db = SessionLocal()
+def update_order_status(
+    id: int, status_update: OrderBase, db: Session = Depends(get_db)
+):
     db_order = db.query(OrderModel).filter(OrderModel.id == id).first()
     if not db_order:
         raise HTTPException(status_code=404, detail="Order not found")

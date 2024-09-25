@@ -29,8 +29,24 @@ services:
     networks:
       - warehouse-network
 
+  test_db:
+    image: postgres:15.0
+    container_name: warehouse_test_db
+    restart: always
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpassword
+      POSTGRES_DB: testdatabase
+    volumes:
+      - test-db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - warehouse-network
+
 volumes:
   db-data:
+  test-db-data:
 
 networks:
   warehouse-network:

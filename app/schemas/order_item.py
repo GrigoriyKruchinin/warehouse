@@ -13,5 +13,5 @@ class OrderItemCreate(OrderItemBase):
 class OrderItem(OrderItemBase):
     id: int
 
-    class Config:
+    class ConfigDict:
         from_attributes = True

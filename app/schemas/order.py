@@ -19,5 +19,5 @@ class Order(OrderBase):
     created_at: datetime
     items: List[OrderItem]
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
